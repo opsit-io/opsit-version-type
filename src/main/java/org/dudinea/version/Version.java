@@ -8,7 +8,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+
 public class Version extends Number {
+    private static final long serialVersionUID = 1;
     final int IDX_MAJOR = 0;
     final int IDX_MINOR = 1;
     final int IDX_PATCH = 2;
