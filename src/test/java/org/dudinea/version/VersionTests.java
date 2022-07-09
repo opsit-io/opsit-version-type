@@ -4,16 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import org.dudinea.version.Version;
-import static org.dudinea.version.Version.isRoundNumber;
 import static org.dudinea.version.Version.list;
-
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 

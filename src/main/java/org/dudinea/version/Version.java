@@ -335,7 +335,7 @@ public class Version extends Number {
     protected void appendPart(StringBuilder b,
                               String sep1,
                               String sep2,
-                              Collection vals) {
+                              Collection<String> vals) {
         if (null != vals && !vals.isEmpty()) {
             if (b.length() > 0) {
                 b.append(sep1);
@@ -515,12 +515,9 @@ public class Version extends Number {
             return this;
         }
         Version result = new Version();
-        result.versions =
-            mapall(op, this.versions, o.versions);
-        result.prereleaseIds =
-            mapall(op,this.prereleaseIds, o.prereleaseIds);
-        result.buildIds =
-            mapall(op,this.buildIds, o.buildIds);
+        result.versions = mapall(op, this.versions, o.versions);
+        result.prereleaseIds = mapall(op, this.prereleaseIds, o.prereleaseIds);
+        result.buildIds = mapall(op, this.buildIds, o.buildIds);
         return result;
     }
 
@@ -568,28 +565,21 @@ public class Version extends Number {
 
 
     
-    public static List mapall(Multiop op, Object... seqs) {
+    public static <T> List<T> mapall(Multiop op, Object... seqs) {
         int maxlen = maxLength(seqs);
-        List result = new ArrayList<Object>(maxlen);
+        List<T> result = new ArrayList<T>(maxlen);
         Object[] args = new Object[seqs.length];
         for (int i = 0; i < maxlen; i++) {
             for (int j = 0; j < seqs.length; j++) {
                 args[j] = getElement(seqs[j], i);
             }
-            result.add(i, op.perform(args));
+            result.add(i, (T)op.perform(args));
         }
         return result;
     }
     
 
-    public static <T> T  nvl(T... objects) {
-        for (T object : objects) {
-            if (null != object) {
-                return object;
-            }
-        }
-        return null;
-    }
+
 
     public static <T>List<T> list(T ... objs) {
         List <T>lst = new ArrayList<T>(objs.length);
@@ -626,11 +616,11 @@ public class Version extends Number {
 	    }
     }
 
-    public static String objToString(Object val) {
+    protected static String objToString(Object val) {
         return null == val ? "NIL" :  val.toString();
     }
 
-    public static boolean isRoundNumber(Number val) {
+    protected static boolean isRoundNumber(Number val) {
         if (null == val) {
             return false;
         }
