@@ -1,16 +1,12 @@
 package org.dudinea.version;
 
-
 import java.util.List;
-import java.util.Map;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.lang.reflect.Array;
-
 
 public class Version extends Number {
     final int IDX_MAJOR = 0;
@@ -355,7 +351,6 @@ public class Version extends Number {
         appendPart(b, "", ".", this.versions);
         appendPart(b, "-", ".", this.prereleaseIds);
         appendPart(b, "+", ".", this.buildIds);
-        
         return b.toString();
     }
     
@@ -513,42 +508,18 @@ public class Version extends Number {
         result.buildIds = mapall(op, this.buildIds, o.buildIds);
         return result;
     }
-
-    protected static int getLength(Object val,
-                                boolean allowNonSeq) {
-        if (null == val) {
-            if (allowNonSeq) {
-                return 0;
-            } else {
-                throw new RuntimeException("NIL not a sequence: ");
-            }
-        } else if (val instanceof Collection) {
-            return ((Collection)val).size();
-        } else if (val instanceof CharSequence) {
-            return ((CharSequence)val).length();
-        } else if (val.getClass().isArray()) {
-            return Array.getLength(val);
-        } else if (val instanceof Map) {
-            return ((Map)val).size();
-        } else {
-            if (allowNonSeq) {
-                return 1;
-            } else {
-                throw new RuntimeException("Given object type is not a sequence: "+val.getClass());
-            }
-        }
-    }
-    
+  
 
     protected static interface  Multiop{
         public Object perform(String... objs);
     }
 
 
-    protected static int maxLength(Object... seqs) {
+    @SafeVarargs
+    protected static int maxLength(List<String>... seqs) {
         int result = 0;
         for (int i = 0; i < seqs.length; i++) {
-            int len = getLength(seqs[i], false);
+            int len = seqs[i].size();
             if (len > result) {
                 result = len;
             }
@@ -557,7 +528,7 @@ public class Version extends Number {
     }
 
 
-    
+    @SafeVarargs
     protected static  List<String> mapall(Multiop op, List<String>... seqs) {
         int maxlen = maxLength(seqs);
         List<String> result = new ArrayList<String>(maxlen);
@@ -571,7 +542,7 @@ public class Version extends Number {
         return result;
     }
     
-    
+    @SafeVarargs
     protected static <T>List<T> list(T ... objs) {
         List <T>lst = new ArrayList<T>(objs.length);
         lst.addAll(Arrays.asList(objs));
