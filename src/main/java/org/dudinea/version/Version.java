@@ -1,7 +1,6 @@
 package org.dudinea.version;
 
 import java.util.List;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -305,6 +304,11 @@ public class Version extends Number {
     }
 
     @Override
+    public int hashCode() {
+        return this.asString().hashCode();
+    }
+
+    @Override
     public String toString() {
         return null != src ? src : asString();
     }
@@ -546,8 +550,10 @@ public class Version extends Number {
     
     @SafeVarargs
     protected static <T>List<T> list(T ... objs) {
-        List <T>lst = new ArrayList<T>(objs.length);
-        lst.addAll(Arrays.asList(objs));
+        final List <T>lst = new ArrayList<T>(objs.length);
+        for (int i = 0; i < objs.length; i++) {
+            lst.add(objs[i]);
+        }
         return lst;
     }
 
