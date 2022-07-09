@@ -306,7 +306,12 @@ public class Version extends Number {
         
     }
 
-    public static boolean equal(Object a, Object b) {
+    @Override
+    public String toString() {
+        return null != src ? src : asString();
+    }
+    
+    private static boolean equal(Object a, Object b) {
         if (null == a) {
             return null == b;
         }
@@ -314,16 +319,7 @@ public class Version extends Number {
     }
 
     
-    protected void appendPart(StringBuilder b, String sep, Number val) {
-        if (null != val) {
-            if (b.length() > 0) {
-                b.append(sep);
-            }
-            b.append(val);
-        }
-    }
-
-    protected void appendPart(StringBuilder b, String sep, String val) {
+    private static void appendPart(StringBuilder b, String sep, String val) {
         if (null != val) {
             if (b.length() > 0) {
                 b.append(sep);
@@ -332,7 +328,7 @@ public class Version extends Number {
         b.append(val);
     }
 
-    protected void appendPart(StringBuilder b,
+    private void appendPart(StringBuilder b,
                               String sep1,
                               String sep2,
                               Collection<String> vals) {
@@ -353,7 +349,7 @@ public class Version extends Number {
     }
 
     
-    protected String asString() {
+    private String asString() {
         StringBuilder b = new StringBuilder();
         appendPart(b, "", this.prefix);
         appendPart(b, "", ".", this.versions);
@@ -364,13 +360,10 @@ public class Version extends Number {
     }
     
     
-    @Override
-    public String toString() {
-        return null != src ? src : asString();
-    }
 
 
-    protected static long atol(String a) {
+
+    private static long atol(String a) {
         try {
             return Long.parseLong(a);
         } catch (Exception ex) {
@@ -378,7 +371,7 @@ public class Version extends Number {
         }
     }
     
-    protected static boolean isANum(String v) {
+    private static boolean isANum(String v) {
         try {
             Long.parseLong(v);
             return true;
@@ -390,9 +383,9 @@ public class Version extends Number {
     public Version sub(Version o) {
         final Multiop addop = new Multiop() {
                 @Override
-                public Object perform(Object... objs) {
-                    String a = (String)objs[0];
-                    String b = (String)objs[1];
+                public Object perform(String... objs) {
+                    String a = objs[0];
+                    String b = objs[1];
                     if (null == a) {
                         return null;
                     } else {
@@ -490,9 +483,9 @@ public class Version extends Number {
     public Version add(Version o) {
         final Multiop addop = new Multiop() {
                 @Override
-                public Object perform(Object... objs) {
-                    String a = (String)objs[0];
-                    String b = (String)objs[1];
+                public Object perform(String... objs) {
+                    String a = objs[0];
+                    String b = objs[1];
                     if (null == a) {
                         return b;
                     } else {
@@ -510,7 +503,7 @@ public class Version extends Number {
     }
 
     
-    public Version doOp(Version o, Multiop op) {
+    protected Version doOp(Version o, Multiop op) {
         if (null == o) {
             return this;
         }
@@ -521,7 +514,7 @@ public class Version extends Number {
         return result;
     }
 
-    public static int getLength(Object val,
+    protected static int getLength(Object val,
                                 boolean allowNonSeq) {
         if (null == val) {
             if (allowNonSeq) {
@@ -547,12 +540,12 @@ public class Version extends Number {
     }
     
 
-    public static interface Multiop{
-        public Object perform(Object... objs);
+    protected static interface  Multiop{
+        public Object perform(String... objs);
     }
 
 
-    public static int maxLength(Object... seqs) {
+    protected static int maxLength(Object... seqs) {
         int result = 0;
         for (int i = 0; i < seqs.length; i++) {
             int len = getLength(seqs[i], false);
@@ -565,67 +558,40 @@ public class Version extends Number {
 
 
     
-    public static <T> List<T> mapall(Multiop op, Object... seqs) {
+    protected static  List<String> mapall(Multiop op, List<String>... seqs) {
         int maxlen = maxLength(seqs);
-        List<T> result = new ArrayList<T>(maxlen);
-        Object[] args = new Object[seqs.length];
+        List<String> result = new ArrayList<String>(maxlen);
+        String[] args = new String[seqs.length];
         for (int i = 0; i < maxlen; i++) {
             for (int j = 0; j < seqs.length; j++) {
                 args[j] = getElement(seqs[j], i);
             }
-            result.add(i, (T)op.perform(args));
+            result.add(i, (String)op.perform(args));
         }
         return result;
     }
     
-
-
-
-    public static <T>List<T> list(T ... objs) {
+    
+    protected static <T>List<T> list(T ... objs) {
         List <T>lst = new ArrayList<T>(objs.length);
         lst.addAll(Arrays.asList(objs));
         return lst;
     }
 
-    public static Object getElement(Object seq, int index) {
+    public static String getElement(List<String> seq, int index) {
 	    if (null == seq) {
             return null;
-	    } else if (seq instanceof List) {
+        } else {
             try {
-                final List<Object> list = (List<Object>)seq;
-                return list.get(index);
+                return seq.get(index);
             } catch (IndexOutOfBoundsException bex) {
                 return null;
             }
-	    } else if (seq.getClass().isArray()) {
-            try {
-                return Array.get(seq, index);
-            } catch (ArrayIndexOutOfBoundsException bex) {
-                return null;
-            }
-	    } else if (seq instanceof CharSequence) {
-            try {
-                final CharSequence cs = (CharSequence)seq;
-                return cs.charAt(index);
-            } catch (IndexOutOfBoundsException bex) {
-                return null;
-            }
-	    } else {
-            throw new RuntimeException("Unupported sequence type "+
-                                       seq.getClass().getName());
-	    }
+        }
     }
 
     protected static String objToString(Object val) {
-        return null == val ? "NIL" :  val.toString();
+        return null == val ? "NIL" : val.toString();
     }
-
-    protected static boolean isRoundNumber(Number val) {
-        if (null == val) {
-            return false;
-        }
-        final double d = val.doubleValue();
-        return d % 1 == 0;
-    }
-
+        
 }
