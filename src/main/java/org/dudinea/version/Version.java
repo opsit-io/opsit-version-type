@@ -179,7 +179,7 @@ public class Version extends Number {
     }
 
     public long getVersionPartNum(int idx) {
-        final String vu = (String)getElement(versions, idx);
+        final String vu = getElement(versions, idx);
         if (null == vu) {
             return 0L;
         }
@@ -423,8 +423,8 @@ public class Version extends Number {
     public int compareTo(Version o) {
         int result = 0;
         for (int i = 0; i < versions.size(); i++) {
-            final String tel = (String)getElement(this.versions, i);
-            final String oel = (String)getElement(o.versions, i);
+            final String tel = getElement(this.versions, i);
+            final String oel = getElement(o.versions, i);
             result = compareVerComp(tel, oel);
             if (result != 0) {
                 return result;
@@ -443,8 +443,8 @@ public class Version extends Number {
             return - this.prereleaseIds.size();
         }
         for (int i = 0; i < this.prereleaseIds.size(); i++) {
-            final String tel = (String)getElement(this.prereleaseIds, i);
-            final String oel = (String)getElement(o.prereleaseIds, i);
+            final String tel = getElement(this.prereleaseIds, i);
+            final String oel = getElement(o.prereleaseIds, i);
             result = compareVerComp(tel, oel);
             if (result != 0) {
                 return result;
