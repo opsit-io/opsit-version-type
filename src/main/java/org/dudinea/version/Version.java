@@ -43,9 +43,9 @@ public class Version extends Number implements Comparable<Version> {
    * {@link #isValid()} and {@link #isSemantic()} predicates to
    * check validity of the returned object.
    *
-   * <p>Use {@link #parseValidVersion()} to ensure that version is
+   * <p>Use {@link #parseValidVersion(String)} to ensure that version is
    * minimally valid (has Major number set) or {@link
-   * #parseSemanticVersion()} to ensure that version specification
+   * #parseSemanticVersion(String)} to ensure that version specification
    * is avalid semantic version.
    *
    * @param  str  version specification, may be null
@@ -134,8 +134,8 @@ public class Version extends Number implements Comparable<Version> {
    * <p>The input will be converted according to its actual type:
    * <ul>
    * <li>If it is a Version it will be returned as is.
-   * <li>if it is a Double or Float it will be converted using {@link #fromDouble()}
-   * <li>Other number types will be converted using {@link #fromLong()}
+   * <li>if it is a Double or Float it will be converted using {@link #fromDouble(Double)}
+   * <li>Other number types will be converted using {@link #fromLong(Long)}
    * </ul>
    *
    * @param  num a number
