@@ -4,5 +4,5 @@
  * be used like a Number (arithmetic operations and comparisons are supported).
  * 
  */
-package org.dudinea.version;
+package io.opsit.version;
 

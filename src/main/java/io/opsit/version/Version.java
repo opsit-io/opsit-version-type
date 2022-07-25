@@ -1,4 +1,4 @@
-package org.dudinea.version;
+package io.opsit.version;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -141,7 +141,7 @@ public class Version extends Number implements Comparable<Version> {
    * @param  num a number
    * @return Return version object or null on null input
    */
-  public static Version fromNumber(Number num) {
+  public static Version fromNumber(final Number num) {
     if (num == null) {
       return null;
     }
@@ -162,15 +162,15 @@ public class Version extends Number implements Comparable<Version> {
    * @param doubleNum a Double number
    * @return Return version object or null on null input
    */
-  public static Version fromDouble(Double doubleNum) {
+  public static Version fromDouble(final Double doubleNum) {
     if (doubleNum == null) {
       return null;
     }
     // FIXME: implement
-    long major = doubleNum.longValue();
-    long minor = 0L;
-    long patch = 0L;
-    return mkSemVersion(major, minor, patch, null, null);
+    final long major = doubleNum.longValue();
+    final long minor = 0L;
+    final long patch = 0L;
+    return mkVersion(list(major, minor, patch), null, null);
   }
 
   /**
@@ -179,11 +179,11 @@ public class Version extends Number implements Comparable<Version> {
    * @param  longNum a number
    * @return Version object with longNum as Major version or null on null input
    */
-  public static Version fromLong(Long longNum) {
+  public static Version fromLong(final Long longNum) {
     if (longNum == null) {
       return null;
     }
-    return mkSemVersion(longNum, 0L, 0L, null, null);
+    return mkVersion(list(longNum, 0L, 0L), null, null);
   }
 
   /**
@@ -199,9 +199,29 @@ public class Version extends Number implements Comparable<Version> {
     if (intNum == null) {
       return null;
     }    
-    return mkSemVersion((long)intNum, 0L, 0L, null, null);
+    return mkVersion(list(intNum, 0, 0), null, null);
   }
 
+  /** Build a Version object from its parts.
+   *
+   * @param versions list of versions specifiers
+   * @param build lists of build identifiers   
+   * @param prerelease list of prerelease identifiers
+   * @return Version object made of provided parts
+   */
+  public static Version mkVersion(List<Object> versions,
+                                  List<Object> prerelease,
+                                  List<Object> build)
+    throws IllegalArgumentException {
+    final Version v = new Version();
+    v.versions = chkVerVUnions(versions);
+    v.prereleaseIds = chkVerVUnions(prerelease);
+    v.buildIds = chkVerVUnions(build);
+    return v;
+  }
+
+
+  
   /** Build a Version object representing a Semantic Version from its parts.
    *
    * @param major Major version component
@@ -218,9 +238,9 @@ public class Version extends Number implements Comparable<Version> {
                                      List<Object> build)
     throws IllegalArgumentException {
     final Version v = new Version();
-    v.setVersions(list(chkVerNumberPart(major, "major", true),
-                       chkVerNumberPart(minor, "minor", true),
-                       chkVerNumberPart(patch, "patch", true)));
+    v.versions = list(chkSemVerNumberPart(major, "major"),
+                      chkSemVerNumberPart(minor, "minor"),
+                      chkSemVerNumberPart(patch, "patch"));
     v.prereleaseIds = chkSemVerVUnions(prerelease);
     v.buildIds = chkSemVerVUnions(build);
     return v;
@@ -320,10 +340,6 @@ public class Version extends Number implements Comparable<Version> {
     return this.versions;
   }
 
-  public void setVersions(List<String> versions) {
-    this.versions = versions;
-  }
-
   /**
    * Return list of build identifiers
    *
@@ -339,7 +355,7 @@ public class Version extends Number implements Comparable<Version> {
    * @return true when conforming
    */
   public boolean isSemantic() {
-    return isSemanticVersionParts()
+    return isSemanticVersionParts(this.versions)
       && areAllPartsSemantic(this.prereleaseIds)
       && areAllPartsSemantic(this.buildIds);
   }
@@ -653,6 +669,18 @@ public class Version extends Number implements Comparable<Version> {
     return result;
   }
 
+  protected static List<String>  chkVerVUnions(List<Object> prerelease)
+    throws IllegalArgumentException {
+    List<String> result = list();
+    if (null != prerelease) {
+      for (Object val : prerelease) {
+        result.add(objToString(val));
+      }
+    } 
+    return result;
+  }
+
+  
   protected boolean isSemanticRelOrBuildPart(String val) {
     if (null == val) {
       return true;
@@ -666,19 +694,44 @@ public class Version extends Number implements Comparable<Version> {
                                            boolean mandatory)
     throws IllegalArgumentException {
     if (null == num) {
-      throw new IllegalArgumentException("Invalid null "
-                                         + name 
-                                         + " version");
+      if (mandatory) {
+        throw new IllegalArgumentException("Invalid null " + name + " version");
+      }
+      return null;
     }
     return Long.toString(num);
   }
 
-  protected boolean isSemanticVersionParts() {
-    if (null == versions || versions.size() != 3) {
+  protected static String chkSemVerNumberPart(Long num,
+                                           String name)
+    throws IllegalArgumentException {
+    if (null == num ||  num < 0) {
+      throw new IllegalArgumentException("Invalid "
+                                         + name 
+                                         + " version: " + num);
+    }
+    
+    return Long.toString(num);
+  }
+
+  protected boolean isSemanticVersionPart(String str) {
+    if (null == str || (str.length() > 1 && str.charAt(0) == '0')) { 
       return false;
     }
-    for (String v : versions) {
-      if (null == v || ! this.isSemanticRelOrBuildPart(v)) {
+    try {
+      long result = Long.parseLong(str);
+      return result >= 0;
+    } catch (Exception ex) {
+      return false;
+    }
+  }
+  
+  protected boolean isSemanticVersionParts(List<String> list) {
+    if (null == list || list.size() != 3) {
+      return false;
+    }
+    for (String v : list) {
+      if (null == v || ! this.isSemanticVersionPart(v)) {
         return false;
       }
     }

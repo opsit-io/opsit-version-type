@@ -1,6 +1,6 @@
-package org.dudinea.version;
+package io.opsit.version;
 
-import static org.dudinea.version.Version.list;
+import static io.opsit.version.Version.list;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -14,9 +14,78 @@ import org.junit.Test;
 public class VersionTests {
   // FIXME:
   // test invalid cases, whitespace, etc
+
+  @Test
+  public void testSemanticVersionPart() throws Exception {
+    Version ver = Version.mkSemVersion(1L, 2L, 3L, null, null);
+    assertTrue(ver.isSemanticVersionPart("0"));
+    assertTrue(ver.isSemanticVersionPart("1"));
+    assertTrue(ver.isSemanticVersionPart("2"));
+    assertTrue(ver.isSemanticVersionPart(Integer.toString(Integer.MAX_VALUE)));
+    assertTrue(ver.isSemanticVersionPart(Long.toString(Long.MAX_VALUE)));
+    assertFalse(ver.isSemanticVersionPart("-1"));
+    assertFalse(ver.isSemanticVersionPart(Long.toString(Long.MIN_VALUE)));
+    assertFalse(ver.isSemanticVersionPart("00"));
+    assertFalse(ver.isSemanticVersionPart("01"));
+    assertFalse(ver.isSemanticVersionPart("1ab"));
+    assertFalse(ver.isSemanticVersionPart("1 "));
+    assertFalse(ver.isSemanticVersionPart(" 1"));
+    assertFalse(ver.isSemanticVersionPart("1.1"));
+    assertFalse(ver.isSemanticVersionPart("1.0"));
+    assertFalse(ver.isSemanticVersionPart(".0"));
+  }
+
+  @Test
+  public void testSemanticVersionParts() throws Exception {
+    Version ver = Version.mkSemVersion(1L, 2L, 3L, null, null);
+    assertTrue(ver.isSemanticVersionParts(list("0","0","0")));
+    assertTrue(ver.isSemanticVersionParts(list("0","0","0")));
+    assertTrue(ver.isSemanticVersionParts(list("1","2","3")));
+    assertFalse(ver.isSemanticVersionParts(list("1","2")));
+    assertFalse(ver.isSemanticVersionParts(list("1")));
+    assertFalse(ver.isSemanticVersionParts(list()));
+    assertFalse(ver.isSemanticVersionParts(null));
+    assertFalse(ver.isSemanticVersionParts(list("-1","0","0")));
+    assertFalse(ver.isSemanticVersionParts(list("0","0",null)));
+  }
+  
+
+  @Test
+  public void testMkVersion() throws Exception {
+    Version ver = Version.mkVersion(list(1L,2L,3), null, null);
+    assertNotNull(ver);
+    assertEquals(1L, ver.getMajorNum());
+    assertEquals(2L, ver.getMinorNum());
+    assertEquals(3L, ver.getPatchNum());
+    assertEquals(list(), ver.getPrereleaseIds());
+    assertEquals(list(), ver.getBuildIds());
+    assertTrue(ver.hasMajor());
+    assertTrue(ver.hasMinor());
+    assertTrue(ver.hasPatch());
+    assertTrue(ver.isSemantic());
+    assertEquals("1.2.3", ver.toString());
+  }
+
+
+  @Test
+  public void testMkVersionNeg() throws Exception {
+    Version ver = Version.mkVersion(list(-1L,-2L,-3), null, null);
+    assertNotNull(ver);
+    assertEquals(-1L, ver.getMajorNum());
+    assertEquals(-2L, ver.getMinorNum());
+    assertEquals(-3L, ver.getPatchNum());
+    assertEquals(list(), ver.getPrereleaseIds());
+    assertEquals(list(), ver.getBuildIds());
+    assertTrue(ver.hasMajor());
+    assertTrue(ver.hasMinor());
+    assertTrue(ver.hasPatch());
+    assertFalse(ver.isSemantic());
+    assertEquals("-1.-2.-3", ver.toString());
+  }
+
   
   @Test
-  public void testSemVersion() throws Exception {
+  public void testMkSemVersion() throws Exception {
     Version ver = Version.mkSemVersion(1L,2L,3L, null, null);
     assertNotNull(ver);
     assertEquals(1L, ver.getMajorNum());
@@ -87,7 +156,7 @@ public class VersionTests {
       Version ver = Version.mkSemVersion(1L,2L,null, null, null);
       fail("Exception was expected, but got " + ver);
     } catch (IllegalArgumentException ex) {
-      assertEquals("Invalid null patch version",ex.getMessage());
+      assertEquals("Invalid patch version: null",ex.getMessage());
     }
   }
 
@@ -97,7 +166,7 @@ public class VersionTests {
       Version ver = Version.mkSemVersion(1L,null,2L, null, null);
       fail("Exception was expected, but got " + ver);
     } catch (IllegalArgumentException ex) {
-      assertEquals("Invalid null minor version",ex.getMessage());
+      assertEquals("Invalid minor version: null",ex.getMessage());
     }
   }
 
@@ -187,6 +256,26 @@ public class VersionTests {
   }
 
   @Test
+  public void testSemVersionParseRelease1_x6_Build0_a2_() throws Exception {
+    Version ver = Version.parseVersion("1.2.3-1.x6+0.a2");
+    assertNotNull(ver);
+    assertEquals(1L, ver.getMajorNum());
+    assertEquals(2L, ver.getMinorNum());
+    assertEquals(3L, ver.getPatchNum());
+        
+    assertEquals(list("1","x6"),
+                 ver.getPrereleaseIds());
+    assertEquals(list("0","a2"),
+                 ver.getBuildIds());
+    assertTrue(ver.hasMajor());
+    assertTrue(ver.hasMinor());
+    assertTrue(ver.hasPatch());
+    assertTrue(ver.isSemantic());
+    assertEquals("1.2.3-1.x6+0.a2", ver.toString());
+  }
+
+  
+  @Test
   public void testSemVersionParseRelease1_2_3_4() throws Exception {
     Version ver = Version.parseVersion("1.2.3.4");
     assertNotNull(ver);
@@ -219,8 +308,25 @@ public class VersionTests {
     assertTrue(ver.hasMajor());
     assertTrue(ver.hasMinor());
     assertTrue(ver.hasPatch());
-    //assertTrue(v.isSemantic());
+    assertFalse(ver.isSemantic());
     assertEquals("1.2.3.4-Rel1", ver.toString());
+  }
+
+  @Test
+  public void testSemVersionParseRelease1_2_3_rel1() throws Exception {
+    Version ver = Version.parseVersion("1.2.3-Rel1");
+    assertNotNull(ver);
+    assertEquals(1L, ver.getMajorNum());
+    assertEquals(2L, ver.getMinorNum());
+    assertEquals(3L, ver.getPatchNum());
+    
+    assertEquals(list("Rel1"),ver.getPrereleaseIds());
+    assertEquals(list(),ver.getBuildIds());
+    assertTrue(ver.hasMajor());
+    assertTrue(ver.hasMinor());
+    assertTrue(ver.hasPatch());
+    assertTrue(ver.isSemantic());
+    assertEquals("1.2.3-Rel1", ver.toString());
   }
 
   @Test
