@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Version extends Number {
+public class Version extends Number implements Comparable<Version> {
   static final long serialVersionUID = 1;
   
   private static final int IDX_MAJOR = 0;
