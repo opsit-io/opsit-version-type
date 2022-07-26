@@ -1,12 +1,17 @@
 ##############################
 ## Java
 ##############################
+# BlueJ files
+*.ctxt
 .mtj.tmp/
 *.class
 *.jar
 *.war
 *.ear
 *.nar
+*.zip
+*.tar.gz
+*.rar
 hs_err_pid*
 # Eclipse
 .classpath
@@ -22,7 +27,6 @@ hs_err_pid*
 .DS_Store
 
 # Maven
-log/
 target/
 ##############################
 ## Maven
@@ -101,25 +105,20 @@ nb-configuration.xml
 @jsumanadas
 
 ##############################
-## Data folder for local dev
+# Log files
 ##############################
-
-node_modules
-node_modules/
-/.angular/
-/.angular/cache
-.angular/cache
-.angular/cache/babel-webpack
-.angular/cache/angular-webpack
-opsit-frontend/node_modules
-opsit-frontend/dist
-opsit-frontend/.angular
-opsit-frontend/.angular-config
-opsit-frontend/node
-/node_modules/
-opsit-backend/target
+*.log
+log/
 
 
+##############################
+# Emacs
+##############################
 \#*\#
 *~
+
+##############################
+## Local
+##############################
+
 
