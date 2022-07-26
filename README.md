@@ -4,7 +4,7 @@ io.opsit.version.Version
 
 ## Introduction
 
-*io.opsit.version.Version* is an immutable datatype that reporesents software version.
+*io.opsit.version.Version* is an immutable datatype that represents software version.
 
 It supports the specifications of Semantic Versioning and can be used like a Number:
 arithmetic operations and comparisons are supported.
