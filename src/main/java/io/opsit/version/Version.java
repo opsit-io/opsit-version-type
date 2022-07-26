@@ -246,6 +246,24 @@ public class Version extends Number implements Comparable<Version> {
     return v;
   }
 
+  /** Build a Version object representing a Semantic Version from its parts.
+   *
+   * @param major Major version component
+   * @param minor Minor version component
+   * @param patch Patch version component
+   * @param build lists of build identifiers
+   * @param prerelease list of prerelease identifiers
+   * @return Version object made of provided parts
+   */
+  public static Version mkSemVersion(int major,
+                                     int minor,
+                                     int patch,
+                                     List<Object> prerelease,
+                                     List<Object> build)
+    throws IllegalArgumentException {
+    return mkSemVersion((long) major, (long) minor, (long) patch, prerelease, build);
+  }
+
   /**
    * Predicate to check for Development version according to the
    * SemVer spec.

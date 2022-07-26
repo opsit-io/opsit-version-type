@@ -1,5 +1,7 @@
 package io.opsit.version;
 
+
+
 import static io.opsit.version.Version.list;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,7 +11,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-
+import java.util.Arrays;
 
 public class VersionTests {
   // FIXME:
@@ -458,10 +460,34 @@ public class VersionTests {
     }
   }
 
+  @Test
+  public void testDocsExample() {
+    Version v1 = Version.parseVersion("1.2.3");
+
+    v1.isSemantic(); // => true
+    assertTrue(v1.isSemantic());
     
-  /*@Test
-    public void testFromInt() throws Exception {
-    Version v1 = new Version(1L);
-    assertEquals(Version.parseVersion("1.0.0"), v1);
-    }*/
+    Version v2 = Version.parseVersion("1.2.3-beta");
+
+    v2.isSemantic(); // => true
+    assertTrue(v2.isSemantic());
+
+    int isLater = v1.compareTo(v2); // => 1
+    assertEquals(1, isLater);
+
+    Version v3 = v1.add(Version.parseVersion("0.0.1-alpha")); // => 1.2.4-alpha
+    assertEquals("1.2.4-alpha", v3.toString());
+
+    Version v4 = Version.parseVersion("1.2.3.4"); // => 1.2.3.4
+    assertEquals("1.2.3.4", v4.toString());
+    
+    v4.isSemantic(); // => false
+    assertFalse(v4.isSemantic());
+
+    Version v5 = Version.mkSemVersion(1, 2, 3,
+                                      Arrays.asList("alpha","1"),
+                                      Arrays.asList("build1")); // => 1.2.3-alpha.1+build1
+    assertEquals("1.2.3-alpha.1+build1", v5.toString());
+  }
+
 }
