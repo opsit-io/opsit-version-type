@@ -40,4 +40,5 @@ var v5 = Version.mkSemanticVersion(1,2,3,
 
 Copyright © 2022 Opsit.io
 
-Distributed under the AGPL License
+Distributed under the GNU Affero General Public License v3.0
+

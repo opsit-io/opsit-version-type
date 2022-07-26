@@ -3,6 +3,25 @@
   <groupId>io.opsit</groupId>
   <artifactId>opsit-version-type</artifactId>
   <version>0.0.1</version>
+
+  <name>Opsit Version Type</name>
+  <description>An immutable datatype that reporesents software versions.</description>
+  <url>http://maven.apache.org</url>
+
+  <licenses>
+    <license>
+      <name>GNU Affero General Public License v3.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git@github.com:opsit-io/opsit-version-type.git</connection>
+    <developerConnection>scm:git:git@github.com:opsit-io/opsit-version-type.git</developerConnection>
+    <url>https://github.com/opsit-io/opsit-version-type</url>
+  </scm>
+    
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
