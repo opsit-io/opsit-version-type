@@ -1,7 +1,5 @@
 package io.opsit.version;
 
-
-
 import static io.opsit.version.Version.list;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,9 +12,6 @@ import org.junit.Test;
 import java.util.Arrays;
 
 public class VersionTests {
-  // FIXME:
-  // test invalid cases, whitespace, etc
-
   @Test
   public void testSemanticVersionPart() throws Exception {
     Version ver = Version.mkSemVersion(1L, 2L, 3L, null, null);
