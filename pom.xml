@@ -16,9 +16,18 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <name>Evgeni Doudine</name>
+      <email>dudinea@opsit.io</email>
+      <organization>opsit.io</organization>
+      <organizationUrl>https://github.com/opsit-io</organizationUrl>
+    </developer>
+  </developers>
+
   <scm>
     <connection>scm:git:git@github.com:opsit-io/opsit-version-type.git</connection>
-    <developerConnection>scm:git:git@github.com:opsit-io/opsit-version-type.git</developerConnection>
+    <developerConnection>scm:git:ssh@github.com:opsit-io/opsit-version-type.git</developerConnection>
     <url>https://github.com/opsit-io/opsit-version-type</url>
   </scm>
     
