@@ -565,7 +565,7 @@ public class Version extends Number implements Comparable<Version> {
    * <p>The comparison is performed according to the Semantic Versioning specification.
    *
    * @param other Version to compare to
-   * @return: negative if lower, positive if bigger than the other. 0 if equal.
+   * @return negative if lower, positive if bigger than the other. 0 if equal.
    */
   public int compareTo(Version other) {
     int result = 0;
