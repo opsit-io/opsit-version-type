@@ -1,0 +1,46 @@
+name: Build and publish jars
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build-dsl-core:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+
+      - name: Setup java and maven central
+        uses: actions/setup-java@v3
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+          server-id: ossrh
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          
+      - name: Build and deploy with maven
+        run: mvn --batch-mode clean deploy
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          
+#        working-directory: ./
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+
+        
+
+      
