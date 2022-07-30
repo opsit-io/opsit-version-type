@@ -46,13 +46,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <!--distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub opsit-io Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/opsit-io/opsit-version-type</url>
-    </repository>
-  </distributionManagement-->
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
@@ -63,6 +57,32 @@
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
   </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>publish</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  
   <build>
     <plugins>
       <plugin>
@@ -129,20 +149,6 @@
             </configuration>
             <goals>
               <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
             </goals>
           </execution>
         </executions>
