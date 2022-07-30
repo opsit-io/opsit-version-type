@@ -17,7 +17,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-
       - name: Setup java and maven central
         uses: actions/setup-java@v3
         with:
@@ -29,7 +28,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
-      - name: Build with maven
+      - name: Build and deploy with maven
         run: mvn --batch-mode -P publish clean install
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
