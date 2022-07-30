@@ -31,7 +31,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Build and deploy with maven
-        run: ls ~/.m2 && cat ~/.m2/settings.xml
+        run: ls ~/.m2 && cat ~/.m2/settings.xml && echo "OSSRH_USERNAME=${OSSRH_USERNAME} OSSRH_TOKEN=$(echo ${OSSRH_TOKEN} | md5sum)"
         #mvn --batch-mode clean deploy
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
