@@ -455,6 +455,7 @@ public class Version extends Number implements Comparable<Version> {
    * <p>See the project documentation on details of version arithmetics.
    *
    * @param other The substrahend
+   * @return substraction result - new Version object
    */
   public Version sub(Number other) {
     if (null == other) {
@@ -475,6 +476,7 @@ public class Version extends Number implements Comparable<Version> {
    * <p>See the project documentation on details of version arithmetics.
    *
    * @param other The substrahend
+   * @return substraction result - new Version object
    */
   public Version sub(Version other) {
     final Multiop addop = new Multiop() {
@@ -514,6 +516,7 @@ public class Version extends Number implements Comparable<Version> {
    * <p>See the project documentation on details of version arithmetics.
    *
    * @param other Number to be added
+   * @return result of operation - new Version object
    */  
   public Version add(Number other) {
     if (null == other) {
@@ -535,6 +538,7 @@ public class Version extends Number implements Comparable<Version> {
    * <p>See the project documentation on details of version arithmetics.
    *
    * @param other Version to be added
+   * @return result of operation - new Version object   
    */      
   public Version add(Version other) {
     final Multiop addop = new Multiop() {
