@@ -2,7 +2,7 @@ name: Make release
 
 on:
   release:
-    type: [ published ]
+    types: [ published ]
 
 # FIXME:
 #    tags:
@@ -39,12 +39,21 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Release
-        uses: docker://antonyurchenko/git-release:latest
+        uses: skx/github-action-publish-binaries@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ALLOW_EMPTY_CHANGELOG: true
         with:
           args: target/*.jar target/*.asc target/*.pom
+          
+      # This one cannot work on already existing release (release.* events)
+      # 
+      # - name: Release
+      #   uses: docker://antonyurchenko/git-release:latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     ALLOW_EMPTY_CHANGELOG: true
+      #   with:
+      #     args: target/*.jar target/*.asc target/*.pom
 
 
         
