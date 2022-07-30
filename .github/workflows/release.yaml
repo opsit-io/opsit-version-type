@@ -2,7 +2,7 @@ name: Make release
 
 on:
   push:
-    branches: [ mail ]
+    branches: [ main ]
 #    tags:
 #      - "v[0-9]+.[0-9]+.[0-9]+"
 
