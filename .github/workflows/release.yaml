@@ -1,4 +1,4 @@
-name: Build and publish jars
+name: Make release 
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
-  build-and-publish:
+  build-and-release:
     runs-on: ubuntu-latest
     environment: dev
     defaults:
