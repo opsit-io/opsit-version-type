@@ -2,7 +2,7 @@ name: Make release
 
 on:
   release:
-    type: [ created ]
+    type: [ published ]
 #    branches: [ main ]
 #    tags:
 #      - "v[0-9]+.[0-9]+.[0-9]+"
