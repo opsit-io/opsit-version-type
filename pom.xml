@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.opsit</groupId>
   <artifactId>opsit-version-type</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3-SNAPSHOT</version>
 
   <name>Opsit Version Type</name>
   <description>An immutable datatype that reporesents software versions.</description>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/opsit-io/opsit-version-type</url>
 
   <licenses>
     <license>
